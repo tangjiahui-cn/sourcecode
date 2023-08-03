@@ -1,27 +1,28 @@
-// 路由映射表
+/**
+ * hash模式
+ * 
+ */
+
+const dom = document.getElementById('hash-content')
+const lastPage = document.getElementById('lastPage')
 const routes = {
-  '#/': 'Home',
-  '#/about': 'About',
-  '#/contact': 'Contact'
-};
-
-// 路由处理函数
-function handleRoute() {
-  const path = location.hash || '#/';
-  const content = document.getElementById('content');
-  content.textContent = routes[path];
+    '/home': 'Home',
+    '/about': 'About',
+    '/help': 'Help'
 }
 
-// 监听 hash 变化事件
-window.addEventListener('hashchange', handleRoute);
-window.addEventListener('load', handleRoute);
-// 监听 popstate 事件
-window.addEventListener('popstate', handleRoute);
-
-// 回退按钮点击事件处理函数
-
-function handleBackButton() {
-  history.back()
+function handleRoute () {
+    let hash = window.location.hash;
+    if (hash) {
+        hash = hash.slice(1);
+    }
+    dom.innerHTML = routes[hash] || '';
 }
 
+window.addEventListener('load', handleRoute)
+window.addEventListener('hashchange', handleRoute)
+// 或者 window.addEventListener('popstate', handleRoute)
 
+lastPage.addEventListener('click', () => {
+    window.history.back()
+})

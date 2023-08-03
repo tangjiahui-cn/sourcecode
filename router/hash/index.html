@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Hash Router</title>
-</head>
-<body>
-  <ul>
-    <li><a href="#/">Home</a></li>
-    <li><a href="#/about">About</a></li>
-    <li><a href="#/contact">Contact</a></li>
-  </ul>
+  <head></head>
+  <body>
+    <p>
+      <h1>Hash模式</h1>
 
-  <div id="content"></div>
-
-  <script src="router.js"></script>
-</body>
+      <button id="lastPage">上一页</button>
+      <ul>
+        <li><a href="/">index</a></li>
+        <li><a href="#/home">home</a></li>
+        <li><a href="#/about">about</a></li>
+        <li><a href="#/help">help</a></li>
+      </ul>
+  
+      <div id="hash-content"></div>
+      <script src="./hash.js"></script>
+    </p>
+  </body>
 </html>
