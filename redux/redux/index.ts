@@ -42,7 +42,8 @@ export function applyMiddleware(...middlewares) {
 // 创建一个store
 export function createStore(reducer: any, middlewareEnhance?: any) {
   let state: any = {};
-  const callbacks: any[] = [];
+  let callbackId = 0;
+  const callbacks = new Map();
 
   if (middlewareEnhance) {
     return middlewareEnhance(createStore)(reducer);
@@ -58,7 +59,11 @@ export function createStore(reducer: any, middlewareEnhance?: any) {
   }
 
   function subscribe(callback) {
-    callbacks.push(callback);
+    const id = callbackId++;
+    callbacks.set(id, callback);
+    return () => {
+      callbacks.delete(id);
+    };
   }
 
   dispatch({ type: Symbol() });
