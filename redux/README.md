@@ -9,5 +9,5 @@
 npm i -g esno
 
 # 运行测试示例
-esno index
+esno test
 ```

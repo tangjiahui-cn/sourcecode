@@ -41,28 +41,44 @@ export function applyMiddleware(...middlewares) {
 
 // 创建一个store
 export function createStore(reducer: any, middlewareEnhance?: any) {
-  let state: any = {};
-  let callbackId = 0;
-  const callbacks = new Map();
-
   if (middlewareEnhance) {
     return middlewareEnhance(createStore)(reducer);
+  }
+  let state: any = {};
+  let id = 0;
+  let currentListeners: any = new Map();
+  let nextListeners: any = currentListeners;
+
+  function ensureNext() {
+    if (currentListeners === nextListeners) {
+      nextListeners = new Map();
+      currentListeners.forEach((value, key) => {
+        nextListeners.set(key, value);
+      });
+    }
   }
 
   function getState() {
     return state;
   }
 
+  // 发布（将上一次的数据快照拿来执行）
   function dispatch(action: any) {
     state = reducer(state, action);
-    callbacks.forEach((fn) => fn());
+    (currentListeners = nextListeners).forEach((listener) => {
+      listener();
+    });
   }
 
+  // 订阅 （如果正在dispatch，则将订阅添加到下一次数据快照）
   function subscribe(callback) {
-    const id = callbackId++;
-    callbacks.set(id, callback);
+    const listenId = id++;
+    ensureNext();
+    nextListeners.set(listenId, callback);
     return () => {
-      callbacks.delete(id);
+      ensureNext();
+      nextListeners.delete(listenId);
+      currentListeners = null;
     };
   }
 

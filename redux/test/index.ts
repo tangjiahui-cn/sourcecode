@@ -1,11 +1,11 @@
 /**
  * 测试 redux 示例
- * 
+ *
  * @author tangjiahui
  * @date 2024/1/16
  */
-import { createStore, applyMiddleware } from "./redux";
-import { thunk } from "./redux/redux-thunk";
+import { createStore, applyMiddleware } from "../src";
+import { thunk } from "../src/redux-thunk";
 
 // 定义 store（注册中间件）
 const store = createStore(reducer, applyMiddleware(thunk));
@@ -36,18 +36,19 @@ const asyncAdd = (dispatch) => {
   }, 1000);
 };
 
-// 同步add
-store.dispatch({
-  type: "add",
+let unA, unB;
+// 初次运行会接触B的监听
+unA = store.subscribe(() => {
+  console.log("A");
+  unB();
 });
-store.dispatch({
-  type: "add",
+
+unB = store.subscribe(() => {
+  console.log("B");
 });
+
 store.dispatch({
   type: "add",
 });
 
 store.dispatch(asyncAdd);
-store.dispatch({
-  type: "add",
-});
